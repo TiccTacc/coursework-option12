@@ -9,9 +9,7 @@ using namespace std;
 const int sizematrix = 9; // 9x9
 const int sizematrixcell = 3; //3x3
 
-//bool checkMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum, int checknum),
-//checkMiniMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum, int numchek);
-
+// Вывод матрицы в консоль
 string outMatrix(int outputmatrix[sizematrix][sizematrix]) {
 
 	string outSting;
@@ -40,13 +38,4 @@ string outMatrix(int outputmatrix[sizematrix][sizematrix]) {
 	}
 	outSting.append("  |-----------+-----------+-----------|\n");
 	return outSting;
-}
-
-void copymatrix(int matrix[sizematrix][sizematrix], int copymatrix[sizematrix][sizematrix]) {
-	for (int s = 1; s < sizematrix; s++)
-	{
-		for (int c = 1; c < sizematrix; c++) {
-			copymatrix[s][c] = matrix[s][c];
-		}
-	}
 }

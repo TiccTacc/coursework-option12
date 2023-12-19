@@ -6,9 +6,14 @@
 
 using namespace std;
 
+//¬ыбор использовани€ двумерного массива был осознан, и оперировалс€ на удобство вывода, и обработки. 
+// ќт использовани€ структуры и двухсв€зного списка отказалс€ ввиду того что матрица имеет определ€емые границы и не столь велика.
+
 const int sizematrix = 9; // 9x9
 const int sizematrixcell = 3; //3x3
-const int levelSu[5][2]{ { 1, 40 }, { 2, 30 }, { 3, 25 }, { 4, 22 }, { 5, 20 } };
+
+// ”ровни сложности, второй индекс - кол-во показываемых значений
+const int levelSu[5][2]{ { 1, 40 }, { 2, 30 }, { 3, 25 }, { 4, 22 }, { 5, 20 } }; 
 
 //const int originalMatrix[sizematrix][sizematrix] = {{ 1,2,3,/**/4,5,6,/**/7,8,9 },
 //													{ 4,5,6,/**/7,8,9,/**/1,2,3 },
@@ -34,32 +39,34 @@ void creatSU(int transformedmatrix[sizematrix][sizematrix]),
 	copymatrix(int matrix[sizematrix][sizematrix], int copymatrix[sizematrix][sizematrix]),
 	tranfomatingMatrixToTree(int creatingSu[sizematrix][sizematrix], int sizeAvailableCells, int outputmatrix[sizematrix][sizematrix]);
 
-
-int main()
-{
-
+int main() {
 	setlocale(LC_ALL, "Russian");
+
+	//¬ыбор уровн€ сложности
 	int levelSudoky = selectlvlSU();
+
+	//—оздаем матрицу и генерируем судоку 
 	int creatingSu[sizematrix][sizematrix];
-
 	creatSU(creatingSu);
+	// --
 
-	int sizeAvailableCells = levelSu[levelSudoky - 1][1]; // получим количество выводных €чеек	
-	int outputmatrix[sizematrix][sizematrix];
+	// ѕолучим количество выводных €чеек	
+	int sizeAvailableCells = levelSu[levelSudoky - 1][1]; 
+	int outputmatrix[sizematrix][sizematrix]; // ћатрица дл€ вывода в консоль
+
 	//«аполним нул€ми, дл€ понимани€ пустых €чеек
 	for (int s = 0; s < sizematrix; s++){
 		for (int c = 0; c < sizematrix; c++){
-			outputmatrix[s][c] = 0;
+			outputmatrix[s][c] = 0; 
 		}
 	}
-
-	tranfomatingMatrixToTree(creatingSu, sizeAvailableCells, outputmatrix);
-	inTheGame(creatingSu, outputmatrix);
-
-	//Start The Game
+	// транформирование в выводную матрицу (убираем значени€ из матрицы) 
+	tranfomatingMatrixToTree(creatingSu, sizeAvailableCells, outputmatrix); 
+	inTheGame(creatingSu, outputmatrix); //Start The Game
 
 }
 
+// ѕервое что выводим на консоль, это предоставление выбора уровн€ сложности (всего 5 вариантов) 
 int selectlvlSU() {
 
 	int selectedValue = 0;
@@ -82,24 +89,9 @@ int selectlvlSU() {
 	return selectedValue;
 }
 
-void tranfomatingMatrixToTree(int creatingSu[sizematrix][sizematrix], int sizeAvailableCells, int outputmatrix[sizematrix][sizematrix]) {
-	
-	for (int i = 0; i < sizeAvailableCells; i++)
-	{
-		//—делано 2 рандомных числа, т.к. это упростит выбор и не надо обходить все в цикле
-		int randColumn = rand() % 8;
-		int randString = rand() % 8;
-
-		if (outputmatrix[randString][randColumn] != creatingSu[randString][randColumn]) {
-			outputmatrix[randString][randColumn] = creatingSu[randString][randColumn];
-		}
-		else {
-			tranfomatingMatrixToTree(creatingSu, (sizeAvailableCells - i), outputmatrix);
-			break;
-		}
-	}
-}
-
+// ‘ункци€ генерирует судоку на основе вз€той матрицы, генераци€ идет с помощью перетасовки колонок и строк.
+// ѕосле выполнени€ одной итерации замены, идет проверка на нахождени€ одинаковых значений в горизонтали, вертикали и внутри мини матрицы (3х3)
+// ≈сли был найдено задвоение значени€, то происходит откат на одну итерацию.
 void creatSU(int transformedmatrix[sizematrix][sizematrix])
 {
 	//“ребуетс€ 2 матрицы, дл€ того чтобы в случае чего, откатить на шаг назад
@@ -209,12 +201,37 @@ void creatSU(int transformedmatrix[sizematrix][sizematrix])
 
 }
 
+// –андомно скрываем значени€ матрицы, исход€ из уровн€ сложности
+void tranfomatingMatrixToTree(int creatingSu[sizematrix][sizematrix], int sizeAvailableCells, int outputmatrix[sizematrix][sizematrix]) {
+
+	for (int i = 0; i < sizeAvailableCells; i++)
+	{
+		//—делано 2 рандомных числа, т.к. это упростит выбор и не надо обходить все в цикле
+		int randColumn = rand() % 8;
+		int randString = rand() % 8;
+
+		if (outputmatrix[randString][randColumn] != creatingSu[randString][randColumn]) {
+			outputmatrix[randString][randColumn] = creatingSu[randString][randColumn];
+		}
+		else {
+			tranfomatingMatrixToTree(creatingSu, (sizeAvailableCells - i), outputmatrix);
+			break;
+		}
+	}
+}
+
+
+//—лужебные булевые функции ++
+
+// ѕолна€ проверка всей матрицы, на наличие задвоение
 bool checkfullMatrix(int matrixcheck[sizematrix][sizematrix]) {
+	
 	// ѕроверка по колонкам и строкам
 	for (int c = 0; c < sizematrix; c++) {
 		for (int s = 0; s < sizematrix; s++)
 		{
-			if (!checkMatrix(matrixcheck, s, c, matrixcheck[s][c]) or !checkMiniMatrix(matrixcheck, s, c, matrixcheck[s][c])) //or !checkMatrix(matrixcheck, c, s, matrixcheck[c][s]) 
+			if (!checkMatrix(matrixcheck, s, c, matrixcheck[s][c]) 
+				or !checkMiniMatrix(matrixcheck, s, c, matrixcheck[s][c]))  
 			{
 				return false;
 			}
@@ -223,6 +240,7 @@ bool checkfullMatrix(int matrixcheck[sizematrix][sizematrix]) {
 	return true;
 }
 
+//ѕроверка по горизонтали и вертикали
 bool checkMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum, int checknum)
 {
 
@@ -244,6 +262,7 @@ bool checkMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum,
 	return true;
 }
 
+//ѕроверка в мини матрице (3х3)
 bool checkMiniMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum, int numchek) {
 
 	int shiftmatrixstring, shiftmatrixcolum;
@@ -278,3 +297,4 @@ bool checkMiniMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int co
 	return true;
 }
 
+//—лужебные булевые функции --

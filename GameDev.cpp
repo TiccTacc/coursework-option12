@@ -24,8 +24,14 @@ bool inputIsCorrect(string choice),
 	checkingForAnImmutableValue(immutable* head, int chekColumn, int chekString);
 
 void SubstituteTheValue(immutable* head, int ingameMatrix[sizematrix][sizematrix], string choice),
-	fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizematrix]);
+fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizematrix]),
+matrixDelete(immutable* head);
 
+
+// Функция, для игры в судоку.
+//	игра работает от ввода набора команд
+//	Колонка/Строка/Значение
+//	
 bool inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematrix][sizematrix]) {
 
 	//Вывод первой таблицы
@@ -45,7 +51,7 @@ bool inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematr
 		cin >> choice;
 		cout << endl;
 		
-		if (!inputIsCorrect(choice)){
+		if (!inputIsCorrect(choice)) { 
 			cout << "Please repeat the input." << endl;
 			continue;
 		}
@@ -56,13 +62,16 @@ bool inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematr
 		}
 		SummEmptyCells = searchZeroCells(ingameMatrix);
 
-	} while (SummEmptyCells != 0);
+	} while (SummEmptyCells != 0); // Цикл идет пока все пустые ячейки не будут заполнены
 
 	cout << "well done" << endl;
 	return true;
 
 }
 
+// Формативная функция (убирает все лишние символы и буквы) 
+// Оставляя только цифры в типе string
+//
 string formatTheString(string choice) {
 	
 	string formatingString;
@@ -83,6 +92,20 @@ string formatTheString(string choice) {
 
 	}
 	return formatingString;
+}
+
+// Освобождение памяти от двухсвязного списка
+void matrixDelete(immutable* head) {
+	
+	immutable* nextDelete = head;
+	while (head != nullptr)
+	{
+		immutable* nextDelete = head->next;
+		free(head);
+		head = nextDelete;
+	}
+
+
 }
 
 void SubstituteTheValue(immutable*head, int ingameMatrix[sizematrix][sizematrix], string choice) {
