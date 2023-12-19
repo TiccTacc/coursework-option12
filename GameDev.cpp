@@ -108,6 +108,7 @@ void matrixDelete(immutable* head) {
 
 }
 
+// Добавляем значение в матрицу
 void SubstituteTheValue(immutable*head, int ingameMatrix[sizematrix][sizematrix], string choice) {
 	
 	int selectColumn, selectString, selectValue = 0;
@@ -147,6 +148,8 @@ void SubstituteTheValue(immutable*head, int ingameMatrix[sizematrix][sizematrix]
 
 }
 
+// Создание начальных, выводных значений, которые не подвергаются изменениям
+// Для контроля матрицы 
 void fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizematrix]) {
 	
 	immutable* newCell, * tail = NULL;
@@ -180,6 +183,7 @@ void fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizemat
 	}
 }
 
+// Проверка корректности введенной команды
 bool inputIsCorrect(string choice) {
 	
 	char charValue[1];
@@ -208,6 +212,7 @@ bool inputIsCorrect(string choice) {
 	return true;
 }
 
+//Проверка на изменение начальных значений
 bool checkingForAnImmutableValue(immutable* head, int checkColumn, int checkString) {
 
 	immutable* cells = head;
@@ -223,6 +228,7 @@ bool checkingForAnImmutableValue(immutable* head, int checkColumn, int checkStri
 	return true;
 }
 
+// Получение количества пустых строк
 int searchZeroCells(int ingameMatrix[sizematrix][sizematrix]) {
 
 	int SummZerocells = 0;
