@@ -21,11 +21,10 @@ string outMatrix(int outputmatrix[sizematrix][sizematrix]);
 
 bool inputIsCorrect(string choice), 
 	checkfullMatrix(int matrixcheck[sizematrix][sizematrix]),
-	checkingForAnImmutableValue(immutable* head, int chekColumn, int chekString);
+	checkingForAnImmutableValue(immutable* head, int chekColumn, int chekString),
+	SubstituteTheValue(int ingameMatrix[sizematrix][sizematrix], int matrixFull[sizematrix][sizematrix], string choice);
 
-void SubstituteTheValue(immutable* head, int ingameMatrix[sizematrix][sizematrix], string choice),
-fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizematrix]),
-matrixDelete(immutable* head);
+void matrixDelete(immutable* head);
 
 
 // Функция, для игры в судоку.
@@ -38,8 +37,37 @@ bool inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematr
 	string choice;
 	string outsting = outMatrix(ingameMatrix);
 
-	immutable* head = NULL;
-	fillInImmutableValues(head, ingameMatrix);
+	//immutable* head = NULL;
+	//immutable* tail = NULL;
+	//
+	//for (int s = 0; s < sizematrix; s++)
+	//{
+	//	for (int c = 0; c < sizematrix; c++)
+	//	{
+	//		if (ingameMatrix[s][c] == 0)
+	//			continue;
+	//
+	//		immutable* newCell = (struct immutable*)malloc(sizeof(struct immutable));
+	//		newCell->next = NULL;
+	//		newCell->prev = NULL;
+	//		newCell->column = c;
+	//		newCell->string = s;
+	//		newCell->value = ingameMatrix[s][c];
+	//
+	//		if (head == NULL) {
+	//
+	//			head = newCell;
+	//			tail = newCell;
+	//		}
+	//		else {
+	//			tail->next = newCell;
+	//			newCell->prev = tail;
+	//			tail = newCell;
+	//		}
+	//	}
+	//}
+
+	////fillInImmutableValues(ingameMatrix);
 
 	cout << endl << outsting << endl;
 
@@ -55,11 +83,16 @@ bool inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematr
 			cout << "Please repeat the input." << endl;
 			continue;
 		}
-		SubstituteTheValue(head, ingameMatrix, choice);
-		if (checkfullMatrix(ingameMatrix)) {
+		bool truevalue = SubstituteTheValue(ingameMatrix, matrixFull, choice);
+		if (truevalue) {
 			outsting = outMatrix(ingameMatrix);
 			cout << endl << outsting << endl;
 		}
+		else {
+			cout << "invalid value" << endl;
+		}
+		//outsting = outMatrix(ingameMatrix);
+		//cout << endl << outsting << endl;
 		SummEmptyCells = searchZeroCells(ingameMatrix);
 
 	} while (SummEmptyCells != 0); // Цикл идет пока все пустые ячейки не будут заполнены
@@ -109,7 +142,7 @@ void matrixDelete(immutable* head) {
 }
 
 // Добавляем значение в матрицу
-void SubstituteTheValue(immutable*head, int ingameMatrix[sizematrix][sizematrix], string choice) {
+bool SubstituteTheValue(int ingameMatrix[sizematrix][sizematrix], int matrixFull[sizematrix][sizematrix], string choice) {
 	
 	int selectColumn, selectString, selectValue = 0;
 	string formatingChoice = formatTheString(choice);
@@ -137,51 +170,57 @@ void SubstituteTheValue(immutable*head, int ingameMatrix[sizematrix][sizematrix]
 			selectValue = atoi(charValue);
 		}
 
-		if (checkingForAnImmutableValue(head, selectColumn, selectString)) {
+		if (matrixFull[selectColumn][selectString] == selectValue) {
 			ingameMatrix[selectColumn][selectString] = selectValue;
+			return true;
+		}
+		else{
+			return false;
 		}
 
 	}
 	catch (int errorInt) {
 		cout << "Invalid value entered." << endl;
+		return false;
 	}
-
+	return true;
 }
 
-// Создание начальных, выводных значений, которые не подвергаются изменениям
-// Для контроля матрицы 
-void fillInImmutableValues(immutable* head, int ingameMatrix[sizematrix][sizematrix]) {
-	
-	immutable* newCell, * tail = NULL;
-	for (int s = 0; s < sizematrix; s++)
-	{
-		for (int c = 0; c < sizematrix; c++)
-		{
-			if (ingameMatrix[s][c] == 0)
-				continue;
-
-
-			newCell = (struct immutable*)malloc(sizeof(struct immutable));
-			newCell->next = NULL;
-			newCell->prev = NULL;
-			newCell->column = c;
-			newCell->string = s;
-			newCell->value = ingameMatrix[s][c];
-
-			if (head == NULL){
-
-				head = newCell;
-				tail = newCell;
-			}
-			else
-			{
-				tail->next = newCell;
-				newCell->prev = tail;
-				tail = newCell;
-			}
-		}
-	}
-}
+//// Создание начальных, выводных значений, которые не подвергаются изменениям
+//// Для контроля матрицы 
+//void fillInImmutableValues(int ingameMatrix[sizematrix][sizematrix]) {
+//	
+//	immutable* imhead, * newCell, * tail = NULL;
+//	for (int s = 0; s < sizematrix; s++)
+//	{
+//		for (int c = 0; c < sizematrix; c++)
+//		{
+//			if (ingameMatrix[s][c] == 0)
+//				continue;
+//
+//
+//			newCell = (struct immutable*)malloc(sizeof(struct immutable));
+//			newCell->next = NULL;
+//			newCell->prev = NULL;
+//			newCell->column = c;
+//			newCell->string = s;
+//			newCell->value = ingameMatrix[s][c];
+//
+//			if (imhead == NULL) {
+//
+//				imhead = newCell;
+//				tail = newCell;
+//			}
+//			else
+//			{
+//				tail->next = newCell;
+//				newCell->prev = tail;
+//				tail = newCell;
+//			}
+//		}
+//	}
+//	return imhead;
+//}
 
 // Проверка корректности введенной команды
 bool inputIsCorrect(string choice) {

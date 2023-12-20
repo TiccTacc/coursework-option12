@@ -3,7 +3,6 @@
 #include <stdlib.h>
 #include <ctime>
 
-
 using namespace std;
 
 //Выбор использования двумерного массива был осознан, и оперировался на удобство вывода, и обработки. 
@@ -27,7 +26,6 @@ const int levelSu[5][2]{ { 1, 40 }, { 2, 30 }, { 3, 25 }, { 4, 22 }, { 5, 20 } }
 //													{ 6,7,8,/**/9,1,2,/**/3,4,5 },
 //													{ 9,1,2,/**/3,4,5,/**/6,7,8 }};
 
-
 bool checkfullMatrix(int matrixcheck[sizematrix][sizematrix]), 
 	inTheGame(int matrixFull[sizematrix][sizematrix], int ingameMatrix[sizematrix][sizematrix]),
 	checkMatrix(int arrayMatrix[sizematrix][sizematrix], int string, int colum, int checknum),
@@ -36,7 +34,7 @@ bool checkfullMatrix(int matrixcheck[sizematrix][sizematrix]),
 int selectlvlSU();
 
 void creatSU(int transformedmatrix[sizematrix][sizematrix]),
-	copymatrix(int matrix[sizematrix][sizematrix], int copymatrix[sizematrix][sizematrix]),
+	//copymatrix(int matrix[sizematrix][sizematrix], int copymatrix[sizematrix][sizematrix]),
 	tranfomatingMatrixToTree(int creatingSu[sizematrix][sizematrix], int sizeAvailableCells, int outputmatrix[sizematrix][sizematrix]);
 
 int main() {
@@ -230,6 +228,9 @@ bool checkfullMatrix(int matrixcheck[sizematrix][sizematrix]) {
 	for (int c = 0; c < sizematrix; c++) {
 		for (int s = 0; s < sizematrix; s++)
 		{
+			if (matrixcheck[s][c] == 0) // пустые строки не проверяем
+				continue;
+
 			if (!checkMatrix(matrixcheck, s, c, matrixcheck[s][c]) 
 				or !checkMiniMatrix(matrixcheck, s, c, matrixcheck[s][c]))  
 			{
